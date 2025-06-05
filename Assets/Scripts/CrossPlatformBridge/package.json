@@ -1,0 +1,10 @@
+{
+    "name": "com.github.ruw-van.crossplatformbridge",
+    "displayName": "CrossPlatformBridge",
+    "author": { "name": "Ruw", "url": "https://x.com/Ruw" },
+    "version": "0.0.0",
+    "unity": "2022.3",
+    "description": "CrossPlatformBridge is a program that provides a single interface that works across multiple platforms.",
+    "category": "Unity",
+    "dependencies": {}
+}
