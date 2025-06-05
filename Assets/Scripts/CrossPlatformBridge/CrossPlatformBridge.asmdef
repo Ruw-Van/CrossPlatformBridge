@@ -1,0 +1,28 @@
+{
+    "name": "CrossPlatformBridge",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:4129704b5a1a13841ba16f230bf24a57",
+        "GUID:5c01796d064528144a599661eaab93a6",
+        "GUID:831409e8f9d13b5479a3baef9822ad34",
+        "GUID:57c32fc907df0f54e8e6e8f0d2488336",
+        "GUID:a738238285a7a8246af046cbf977522f",
+        "GUID:eaa3727e50bd36d428d0feead3d6ea4c",
+        "GUID:68bd7fdb68ef2684e982e8a9825b18a5",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:5540e30183c82e84b954c033c388e06c",
+        "GUID:fe25561d224ed4743af4c60938a59d0b",
+        "GUID:37e17ffe38d86ae48bc3207e83ffef88",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
