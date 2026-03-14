@@ -1,0 +1,27 @@
+{
+    "name": "CrossPlatformBridge.EOS.Tests",
+    "rootNamespace": "CrossPlatformBridge.Tests.EditMode.EOS",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "GUID:80adee6da51d08940b5767aa2a90c787",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:9de6a1c861e36e347951a5d000057fb3",
+        "GUID:be1f6e9efffcfce41aeb5c2f4c27cf75"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
