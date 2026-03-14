@@ -1,0 +1,26 @@
+{
+    "name": "CrossPlatformBridge.Platform.Netcode.Tests",
+    "rootNamespace": "CrossPlatformBridge.Platform.Netcode.Tests",
+    "references": [
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:80adee6da51d08940b5767aa2a90c787",
+        "GUID:c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

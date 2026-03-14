@@ -1,0 +1,21 @@
+{
+    "name": "CrossPlatformBridge.Valve",
+    "rootNamespace": "",
+    "references": [
+        "GUID:80adee6da51d08940b5767aa2a90c787",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:68bd7fdb68ef2684e982e8a9825b18a5",
+        "GUID:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+        "GUID:831409e8f9d13b5479a3baef9822ad34",
+        "GUID:57c32fc907df0f54e8e6e8f0d2488336"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

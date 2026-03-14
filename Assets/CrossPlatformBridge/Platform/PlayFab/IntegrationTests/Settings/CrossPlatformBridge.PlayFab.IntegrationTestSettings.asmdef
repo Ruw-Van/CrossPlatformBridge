@@ -1,0 +1,18 @@
+{
+    "name": "CrossPlatformBridge.Platform.PlayFab.IntegrationTestSettings",
+    "rootNamespace": "CrossPlatformBridge.Platform.PlayFab.IntegrationTests",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "USE_CROSSPLATFORMBRIDGE_PLAYFAB"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

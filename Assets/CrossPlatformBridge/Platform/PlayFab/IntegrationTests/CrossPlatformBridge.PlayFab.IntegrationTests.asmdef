@@ -1,0 +1,28 @@
+{
+    "name": "CrossPlatformBridge.Platform.PlayFab.IntegrationTests",
+    "rootNamespace": "CrossPlatformBridge.Platform.PlayFab.IntegrationTests",
+    "references": [
+        "CrossPlatformBridge.Platform.PlayFab.IntegrationTestSettings",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:80adee6da51d08940b5767aa2a90c787",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:6c676e9c7185bce4a8f7baf1cfd52007",
+        "GUID:0da6d172d18a54e4389d0dce1e1ffdf2",
+        "GUID:ddfad6a1fe4e455bb28fa3d039777cb1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS",
+        "USE_CROSSPLATFORMBRIDGE_PLAYFAB"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
