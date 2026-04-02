@@ -6,6 +6,9 @@
     "unity": "2022.3",
     "description": "CrossPlatformBridge is a program that provides a single interface that works across multiple platforms.",
     "category": "Unity",
+    "documentationUrl": "https://github.com/Ruw-Van/CrossPlatformBridge-p#readme",
+    "changelogUrl": "https://github.com/Ruw-Van/CrossPlatformBridge-p/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/Ruw-Van/CrossPlatformBridge-p/blob/main/LICENSE",
     "dependencies": {
         "com.cysharp.unitask": "2.5.10"
     }
