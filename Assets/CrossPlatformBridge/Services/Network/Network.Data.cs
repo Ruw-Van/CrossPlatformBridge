@@ -22,6 +22,12 @@ namespace CrossPlatformBridge.Services.Network
 		/// <param name="targetId">宛先ID（省略時は全員）</param>
 		public async UniTask SendData(byte[] data, string targetId = null)
 		{
+			if (data == null)
+			{
+				Debug.LogWarning("Network: null のデータは送信できません。");
+				return;
+			}
+
 			Debug.Log($"Network: データ送信中... サイズ: {data.Length} bytes, 宛先: {(targetId == null ? "全員" : targetId)}"); // ★ Debug.Log のメッセージ変更
 			if (_internalNetworkHandler == null) return;
 			await _internalNetworkHandler.SendData(data, targetId);
@@ -37,6 +43,12 @@ namespace CrossPlatformBridge.Services.Network
 		/// <param name="data">受信データ</param>
 		private void HandleReceivedData(byte[] data, string senderId)
 		{
+			if (data == null)
+			{
+				Debug.LogWarning($"Network: null データを受信しました。送信者: {senderId}");
+				return;
+			}
+
 			Debug.Log($"Network: 内部からデータを受信しました。サイズ: {data.Length} bytes, 送信者: {senderId}");
 			OnDataReceived?.Invoke(data, senderId); // 公開イベントを発行
 		}

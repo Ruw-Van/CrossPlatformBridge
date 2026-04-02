@@ -5,6 +5,7 @@ using CrossPlatformBridge.Services.Network;
 using CrossPlatformBridge.Platform.Dummy.Network;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace CrossPlatformBridge.Platform.Dummy.Tests
@@ -16,6 +17,11 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
     {
         private NetworkHandler _handler;
         private RoomSettings _roomSettings;
+
+        private static NetworkSettings CreateNetworkSettings()
+        {
+            return ScriptableObject.CreateInstance<NetworkSettings>();
+        }
 
         [SetUp]
         public void SetUp()
@@ -38,7 +44,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [Test]
         public void Initialize_SetsIsConnectedTrue()
         {
-            bool result = _handler.Initialize(new NetworkSettings());
+            bool result = _handler.Initialize(CreateNetworkSettings());
 
             Assert.IsTrue(result, "Initialize は true を返す必要があります");
             Assert.IsTrue(_handler.IsConnected, "Initialize 後は IsConnected が true になる必要があります");
@@ -47,7 +53,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [Test]
         public void Initialize_SetsAccountId()
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             Assert.IsNotNull(_handler.AccountId, "AccountId が設定される必要があります");
             StringAssert.StartsWith("dummyUser_", _handler.AccountId.ToString(), "AccountId は 'dummyUser_' で始まる必要があります");
@@ -59,7 +65,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
             bool? receivedStatus = null;
             _handler.OnNetworkConnectionStatusChanged += status => receivedStatus = status;
 
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             Assert.IsNotNull(receivedStatus, "OnNetworkConnectionStatusChanged が発火する必要があります");
             Assert.IsTrue(receivedStatus.Value, "接続状態は true である必要があります");
@@ -68,7 +74,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [Test]
         public void Shutdown_ResetsState()
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             _handler.Shutdown();
 
             Assert.IsFalse(_handler.IsConnected, "Shutdown 後は IsConnected が false になる必要があります");
@@ -80,7 +86,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [Test]
         public void Shutdown_FiresDisconnectEvents()
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool? connectionStatus = null;
             bool? hostStatus = null;
@@ -100,10 +106,10 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator Connect_WhenAlreadyConnected_ReturnsTrueWithoutChangingState() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             string originalAccountId = _handler.AccountId.ToString();
 
-            bool result = await _handler.Connect(new NetworkSettings());
+            bool result = await _handler.Connect(CreateNetworkSettings());
 
             Assert.IsTrue(result, "既接続時の Connect は true を返す必要があります");
             Assert.AreEqual(originalAccountId, _handler.AccountId.ToString(), "AccountId が変更されてはいけません");
@@ -112,7 +118,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator Disconnect_SetsIsConnectedFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             await _handler.Disconnect();
 
@@ -122,7 +128,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator Disconnect_FiresEvents() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool? connectionStatus = null;
             _handler.OnNetworkConnectionStatusChanged += s => connectionStatus = s;
@@ -139,7 +145,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_WhenConnected_ReturnsTrue() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool result = await _handler.CreateLobby(_roomSettings);
 
@@ -149,7 +155,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_SetsIsHostTrue() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             await _handler.CreateLobby(_roomSettings);
 
@@ -170,7 +176,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_FiresOnLobbyOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             string operationType = null;
             bool? success = null;
@@ -187,7 +193,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_AddsHostToConnectedList() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             string connectedId = null;
             _handler.OnPlayerConnected += (id, name) => connectedId = id;
@@ -201,7 +207,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator ConnectLobby_WhenConnected_ReturnsTrue() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool result = await _handler.ConnectLobby(_roomSettings);
 
@@ -211,7 +217,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator ConnectLobby_SetsIsHostFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             await _handler.ConnectLobby(_roomSettings);
 
@@ -221,7 +227,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator DisconnectLobby_ResetsLobbyState() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             await _handler.CreateLobby(_roomSettings);
 
             await _handler.DisconnectLobby();
@@ -233,7 +239,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator DisconnectLobby_FiresOnLobbyOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             await _handler.CreateLobby(_roomSettings);
 
             string operationType = null;
@@ -249,7 +255,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator SearchLobby_ReturnsResults() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             _roomSettings.RoomName = "Dummy";
 
             List<object> results = await _handler.SearchLobby(_roomSettings);
@@ -261,7 +267,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator SearchLobby_WithEmptyQuery_ReturnsAll() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             _roomSettings.RoomName = "";
 
             List<object> results = await _handler.SearchLobby(_roomSettings);
@@ -272,7 +278,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator SearchLobby_WithNonMatchingQuery_ReturnsEmpty() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             _roomSettings.RoomName = "NonExistentLobby_XYZ";
 
             List<object> results = await _handler.SearchLobby(_roomSettings);
@@ -287,7 +293,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateRoom_WhenConnected_ReturnsTrue() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool result = await _handler.CreateRoom(_roomSettings);
 
@@ -297,7 +303,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateRoom_FiresOnRoomOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             string operationType = null;
             bool? success = null;
@@ -312,7 +318,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator ConnectRoom_WhenConnected_ReturnsTrue() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool result = await _handler.ConnectRoom(_roomSettings);
 
@@ -322,7 +328,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator DisconnectRoom_FiresOnRoomOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             await _handler.CreateRoom(_roomSettings);
 
             string operationType = null;
@@ -338,7 +344,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator SearchRoom_DelegatesToSearchLobby() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             _roomSettings.RoomName = "";
 
             List<object> results = await _handler.SearchRoom(_roomSettings);
@@ -359,7 +365,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateRoom_DoesNotFireOnLobbyOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
 
             bool lobbyEventFired = false;
             _handler.OnLobbyOperationCompleted += (op, s, id) => lobbyEventFired = true;
@@ -382,7 +388,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator DisconnectRoom_DoesNotFireOnLobbyOperationCompleted() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             await _handler.CreateRoom(_roomSettings);
 
             bool lobbyEventFired = false;
@@ -400,7 +406,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator SendData_FiresOnDataReceived_WithSameData() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             byte[] sentData = new byte[] { 1, 2, 3, 4, 5 };
             byte[] receivedData = null;
             _handler.OnDataReceived += (data, _) => receivedData = data;
@@ -439,8 +445,8 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_CancelBeforeStart_ReturnsFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
-            await _handler.Connect(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
+            await _handler.Connect(CreateNetworkSettings());
 
             using var cts = new CancellationTokenSource();
             cts.Cancel(); // 事前にキャンセル済み
@@ -453,8 +459,8 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateLobby_CancelDuringOperation_ReturnsFalseAndFiresEvent() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
-            await _handler.Connect(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
+            await _handler.Connect(CreateNetworkSettings());
 
             using var cts = new CancellationTokenSource();
             string receivedOperation = null;
@@ -481,8 +487,8 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator ConnectLobby_CancelDuringOperation_ReturnsFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
-            await _handler.Connect(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
+            await _handler.Connect(CreateNetworkSettings());
 
             using var cts = new CancellationTokenSource();
             var task = _handler.ConnectLobby(_roomSettings, cts.Token);
@@ -495,8 +501,8 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator CreateRoom_CancelDuringOperation_ReturnsFalseAndFiresEvent() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
-            await _handler.Connect(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
+            await _handler.Connect(CreateNetworkSettings());
 
             using var cts = new CancellationTokenSource();
             string receivedOperation = null;
@@ -522,8 +528,8 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator ConnectRoom_CancelDuringOperation_ReturnsFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
-            await _handler.Connect(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
+            await _handler.Connect(CreateNetworkSettings());
 
             using var cts = new CancellationTokenSource();
             var task = _handler.ConnectRoom(_roomSettings, cts.Token);
@@ -540,7 +546,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator MatchmakeLobby_NameMatch_ConnectsSuccessfully() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             var conditions = new RoomSettings { RoomName = "Dummy" };
 
             bool result = await _handler.MatchmakeLobby(conditions);
@@ -552,7 +558,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator MatchmakeLobby_NoMatch_ReturnsFalse() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             var conditions = new RoomSettings { RoomName = "存在しないロビー名XXXXXXX" };
 
             bool result = await _handler.MatchmakeLobby(conditions);
@@ -563,7 +569,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator MatchmakeRoom_NameMatch_ConnectsSuccessfully() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             var conditions = new RoomSettings { RoomName = "Dummy" };
 
             bool result = await _handler.MatchmakeRoom(conditions);
@@ -575,7 +581,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator MatchmakeRoom_NoMatch_CreateIfNotFound_CreatesRoom() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             var conditions = new RoomSettings { RoomName = "BrandNewRoom", MaxPlayers = 4 };
 
             bool result = await _handler.MatchmakeRoom(conditions, createIfNotFound: true);
@@ -587,7 +593,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         [UnityTest]
         public IEnumerator MatchmakeRoom_CustomPropertiesFilter_OnlyMatchingRoom() => UniTask.ToCoroutine(async () =>
         {
-            _handler.Initialize(new NetworkSettings());
+            _handler.Initialize(CreateNetworkSettings());
             var conditions = new RoomSettings
             {
                 CustomProperties = new Dictionary<string, object> { { "gameMode", "Battle" } }

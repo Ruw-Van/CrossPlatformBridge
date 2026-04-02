@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CrossPlatformBridge.Services.Network;
 using CrossPlatformBridge.Platform.Dummy.Network;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace CrossPlatformBridge.Platform.Dummy.Tests
 {
@@ -10,6 +11,11 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
     /// </summary>
     public class RoomSettingsTests
     {
+        private static NetworkSettings CreateNetworkSettings()
+        {
+            return ScriptableObject.CreateInstance<NetworkSettings>();
+        }
+
         // ----------------------------------------------------------------
         // RoomSettings デフォルト値
         // ----------------------------------------------------------------
@@ -160,7 +166,7 @@ namespace CrossPlatformBridge.Platform.Dummy.Tests
         public void DummySettingsFactory_CreateNetworkSettings_WithExisting_ReturnsSameInstance()
         {
             var factory = new DummySettingsFactory();
-            var existing = new NetworkSettings();
+            var existing = CreateNetworkSettings();
 
             var result = factory.CreateNetworkSettings(existing);
 

@@ -95,28 +95,33 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 				StationId = _connectedLobby.Id;
 
 				// Lobby プレイヤースロット追跡を初期化
-				_currentLobbyHostId = _connectedLobby.HostId;
-				_lobbyPlayerIdsBySlot.Clear();
-				foreach (var p in _connectedLobby.Players)
-					_lobbyPlayerIdsBySlot.Add(p.Id);
+					_currentLobbyHostId = _connectedLobby.HostId;
+					_lobbyPlayerIdsBySlot.Clear();
+					foreach (var p in _connectedLobby.Players)
+						_lobbyPlayerIdsBySlot.Add(p.Id);
 
-				// ホスト自身を ConnectedList に追加（ルーム作成者も一覧に表示するため）
-				{
-					string selfId = AccountId?.ToString() ?? "";
-					string selfName = NickName ?? selfId;
-					var selfData = new PlayerData
+					foreach (var lobbyPlayer in _connectedLobby.Players)
 					{
-						Id = selfId,
-						Name = selfName,
-						PlayerProperties = new Dictionary<string, object>()
-					};
-					ConnectedList.Add(selfData);
-					OnPlayerConnected?.Invoke(selfData.Id, selfData.Name);
-				}
+						string playerName = lobbyPlayer.Id;
+						if (lobbyPlayer.Data != null
+							&& lobbyPlayer.Data.TryGetValue("PlayerName", out var nameObj))
+						{
+							playerName = nameObj.Value;
+						}
 
-				Debug.Log($"NetcodeNetworkHandler: ルーム '{_connectedLobby.Name}' (ID: {_connectedLobby.Id}) を作成しました。JoinCode: {_joinCode}");
-				OnRoomOperationCompleted?.Invoke("CreateRoom", true, _connectedLobby.Id);
-				OnHostStatusChanged?.Invoke(true);
+						var playerData = new PlayerData
+						{
+							Id = lobbyPlayer.Id,
+							Name = playerName,
+							PlayerProperties = new Dictionary<string, object>()
+						};
+						ConnectedList.Add(playerData);
+						OnPlayerConnected?.Invoke(playerData.Id, playerData.Name);
+					}
+
+					Debug.Log($"NetcodeNetworkHandler: ルーム '{_connectedLobby.Name}' (ID: {_connectedLobby.Id}) を作成しました。JoinCode: {_joinCode}");
+					OnRoomOperationCompleted?.Invoke("CreateRoom", true, _connectedLobby.Id);
+					OnHostStatusChanged?.Invoke(true);
 				return true;
 			}
 			catch (OperationCanceledException)
@@ -178,13 +183,13 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 				foreach (var p in _connectedLobby.Players)
 					_lobbyPlayerIdsBySlot.Add(p.Id);
 
-				// 参加時点の既存メンバーを ConnectedList に追加（ホスト・自分含む全員）
-				// （OnLobbyChanged は参加後の変化のみ通知するため、ここで初期化が必要）
-				foreach (var lobbyPlayer in _connectedLobby.Players)
-				{
-					string playerName = lobbyPlayer.Id;
-					if (lobbyPlayer.Data != null
-						&& lobbyPlayer.Data.TryGetValue("PlayerName", out var nameObj))
+					// 参加時点の既存メンバーを ConnectedList に追加（ホスト含む全員）
+					// （OnLobbyChanged は参加後の変化のみ通知するため、ここで初期化が必要）
+					foreach (var lobbyPlayer in _connectedLobby.Players)
+					{
+						string playerName = lobbyPlayer.Id;
+						if (lobbyPlayer.Data != null
+							&& lobbyPlayer.Data.TryGetValue("PlayerName", out var nameObj))
 					{
 						playerName = nameObj.Value;
 					}
@@ -478,7 +483,7 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 				_connectedLobby = await LobbyService.Instance.UpdateLobbyAsync(_connectedLobby.Id, updateOptions);
 				_currentLobbyHostId = _connectedLobby.HostId;
 
-				// 5. ConnectedList を現在の Lobby メンバーで再構築（全員含む）
+				// 5. ConnectedList を現在の Lobby メンバーで再構築（ホスト含む全員）
 				ConnectedList.Clear();
 				_lobbyPlayerIdsBySlot.Clear();
 				foreach (var lobbyPlayer in _connectedLobby.Players)
@@ -588,7 +593,6 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 			{
 				string newHostId = lobby.HostId.Value;
 				Debug.Log($"NetcodeNetworkHandler: Lobby ホストが変わりました → {newHostId}");
-				// 新ホストは ConnectedList に残す（PlayerLeft で退出者のみ削除）
 				_currentLobbyHostId = newHostId;
 
 				if (newHostId == AuthenticationService.Instance.PlayerId)

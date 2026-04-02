@@ -280,18 +280,8 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 		{
 			Debug.Log($"NetcodeNetworkHandler: クライアント切断: ClientId = {clientId}");
 
-			if (NetworkManager.Singleton.IsServer)
-			{
-				// サーバー側: 切断プレイヤーをリストから移動（Lobby イベントでも処理されるが Netcode 側でも同期）
-				var player = ConnectedList.Find(p => p.Id == clientId.ToString());
-				if (player != null)
-				{
-					ConnectedList.Remove(player);
-					DisconnectedList.Add(player);
-					OnPlayerDisconnected?.Invoke(player.Id, player.Name);
-				}
-			}
-			else if (clientId == NetworkManager.Singleton.LocalClientId)
+			if (!NetworkManager.Singleton.IsServer
+				&& clientId == NetworkManager.Singleton.LocalClientId)
 			{
 				if (_isIntentionalShutdown)
 				{
@@ -319,8 +309,7 @@ namespace CrossPlatformBridge.Platform.Netcode.Network
 		{
 			Debug.Log("NetcodeNetworkHandler: NetworkManager サーバー開始。");
 			OnHostStatusChanged?.Invoke(true);
-			// ホスト自身は ConnectedList に追加しない
-			// ホストはサーバー役としてルームを管理するが、接続プレイヤー一覧には含めない
+			// ConnectedList は Lobby イベントを唯一の正として更新する
 			RegisterDataMessageHandler();
 		}
 
