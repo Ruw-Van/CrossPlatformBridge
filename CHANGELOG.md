@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.2] - 2026-04-02
+
+### Changed
+- `package.json` に UPM ドキュメント・Changelog・ライセンスリンクを追加
+
+### Fixed
+- `Network.Data.cs`, `DummyNetworkHandlerTests.cs`, `RoomSettingsTests.cs` の不具合を修正
+- Netcode でホストを `ConnectedList` に含めるよう修正（`NetworkHandler.Core.cs`, `NetworkHandler.Room.cs`）
+
 ## [0.0.1] - 2026-03-27
 
 ### Added
